@@ -13,6 +13,8 @@ struct juego
 	int nart;
 	string desc;
 	string ests;
+	string carac;
+	int fecha;
 	char gen[100];
 	char nom[100];
 	char clas[100];
@@ -23,6 +25,7 @@ int cant;
 
 juego* Producto;
 float precio(float x);
+float iva(float x);
 void alta();
 void modificar();
 void eliminar();
@@ -87,7 +90,7 @@ int main()
 	}
 
 }
-
+//validaciones
 void alta()
 {
 	printf("\t %c %c %c |REGISTRO| %c %c %c \t \n", 178, 178, 178, 178, 178, 178);
@@ -96,22 +99,66 @@ void alta()
 	Producto = new juego[cant];
 	for (int i = 0; i < cant; i++)
 	{
+		int rep =0;
 		printf("Ingrese los datos correspondientes \n");
-		printf(">Numero de articulo\n");
-		scanf_s("%d", &Producto[i].nart);
-		cin.ignore();
-		printf(">Nombre del articulo\n");
-		gets_s(Producto[i].nom);
-		printf(">Descripcion del articulo\n");
-		getline(cin, Producto[i].desc);
-		printf(">Genero del articulo\n");
-		gets_s(Producto[i].gen);
-		printf(">Clasificacion del articulo\n");
-		gets_s(Producto[i].clas);
-		printf(">Consola\n");
-		gets_s(Producto[i].con);
-		printf(">Precio unitario del articulo\n");
-		scanf_s("%f", &Producto[i].pre);
+
+		do
+		{
+			
+			printf(">Numero de articulo\n");
+			scanf_s("%d", &Producto[i].nart);
+			cin.ignore();
+			for (int j = 0; j < i; j++)
+			{
+				if (Producto[i].nart == Producto[j].nart)
+				{
+					rep = 1;
+					printf("El numero esta en uso \n");
+				}
+				else
+				{
+					rep = 2;
+				}
+			}
+			
+		} while (rep==1);
+
+			printf(">Nombre del articulo\n");
+			gets_s(Producto[i].nom);
+			printf(">Descripcion del articulo\n");
+			getline(cin, Producto[i].desc);
+			printf(">Genero del articulo\n");
+			gets_s(Producto[i].gen);
+			printf(">Caracteristicas del articulo\n");
+			getline(cin, Producto[i].carac);
+			printf(">Clasificacion del articulo\n");
+			gets_s(Producto[i].clas);
+			printf(">Consola\n");
+			gets_s(Producto[i].con);
+
+			int val;
+
+			do
+			{
+				printf(">A%co de lanzamiento \n", 164);
+				scanf_s("%d", &Producto[i].fecha);
+
+				if ((Producto[i].fecha < 1969) || (Producto[i].fecha>2023))
+				{
+					printf("El a%co ingresado es incorrecto \n", 164);
+					printf("Intente de nuevo \n");
+					val = 1;
+				}
+				else
+				{
+					val = 2;
+				}
+
+			} while (val==1);
+			
+			printf(">Precio unitario del articulo\n");
+			scanf_s("%f", &Producto[i].pre);
+		
 	}
 }
 
@@ -152,6 +199,8 @@ void modificar()
 		printf("4.  Clasificacion \n");
 		printf("5.  Consola \n");
 		printf("6.  Precio \n");
+		printf("7.  Caracteristicas \n");
+		printf("8.  A%co de lanzamiento \n", 164);
 		scanf_s("%d", &op);
 
 		switch (op)
@@ -171,7 +220,7 @@ void modificar()
 			{
 				printf("La descripcion actual es %s \n", Producto[i].desc.c_str());
 				cin.ignore();
-				printf("Ingrese la nueva descripcion \n");//acento
+				printf("Ingrese la nueva descripcion \n");
 				getline(cin, Producto[i].desc);
 			}
 			break;
@@ -181,7 +230,7 @@ void modificar()
 			{
 				printf("El genero actual es %s \n", Producto[i].gen);
 				cin.ignore();
-				printf("Ingrese el nuevo genero \n");//acento
+				printf("Ingrese el nuevo genero \n");
 				gets_s(Producto[i].gen);
 			}
 			break;
@@ -191,7 +240,7 @@ void modificar()
 			{
 				printf("La clasificacion actual es %s \n", Producto[i].clas);
 				cin.ignore();
-				printf("Ingrese la nueva clasificacion \n");//acento
+				printf("Ingrese la nueva clasificacion \n");
 				gets_s(Producto[i].clas);
 			}
 			break;
@@ -213,6 +262,44 @@ void modificar()
 				cin.ignore();
 				printf("Ingrese el nuevo precio unitario \n");
 				scanf_s("%f", &Producto[i].pre);
+			}
+			break;
+
+		case 7:
+			for (int i = j; i == j; i++)
+			{
+				printf("Las Caracteristicas actuales son %s \n", Producto[i].carac.c_str());
+				cin.ignore();
+				printf("Ingrese las nuevas caracteristicas \n");
+				getline(cin, Producto[i].carac);
+			}
+			break;
+
+		case 8:
+			for (int i = j; i == j; i++)
+			{
+				
+				int val;
+				cin.ignore();
+				do
+				{
+					printf("El a%o de lanzamiento actual es %d \n", 164, Producto[i].fecha);
+					printf("Ingrese el nuevo a%co \n", 164);
+					scanf_s("%d", &Producto[i].fecha); //copia y pega la validacion de año
+
+					if ((Producto[i].fecha < 1969) || (Producto[i].fecha > 2023))
+					{
+						printf("El a%co ingresado es incorrecto \n", 164);
+						printf("Intente de nuevo \n");
+						val = 1;
+					}
+					else
+					{
+						val = 2;
+					}
+
+				} while (val == 1);
+
 			}
 			break;
 
@@ -257,27 +344,143 @@ void eliminar()
 
 void lista()
 {
+	int des;
+	string clave;
 	printf("\t %c %c %c |LISTA DE ARTICULOS| %c %c %c \t \n", 178, 178, 178, 178, 178, 178);
-	for (int i = 0; i < cant; i++)
+	
+    printf("Desea filtrar por: \n");
+	printf("1. Consola  \n");
+	printf("2. Genero \n");
+	printf("3. Categoria \n");
+	scanf_s("%d", &des);
+	cin.ignore();
+	printf("buscar por: \n");
+	getline(cin, clave);
+
+	switch (des)
 	{
-		if (Producto[i].pre == 0)
+	case 1:
+		for (int i = 0; i < cant; i++)
 		{
-			printf("PRODUCTO ELIMINADO %d \n", i + 1);
-			printf("\n");
+
+			if (Producto[i].con == clave)
+			{
+				if (Producto[i].pre == 0)
+				{
+					printf("PRODUCTO ELIMINADO %d \n", i);
+					printf("\n");
+				}
+				else
+				{
+					printf("Numero de articulo: %d \n", Producto[i].nart);
+					printf("Nombre del articulo: %s \n", Producto[i].nom);
+					printf("Descripcion del articulo: %s \n", Producto[i].desc.c_str());
+					printf("Genero del articulo: %s \n", Producto[i].gen);
+					printf("Caracteristicas del articulo: %s \n", Producto[i].carac.c_str());
+					printf("Clasificacion del articulo: %s \n", Producto[i].clas);
+					printf("Consola: %s \n", Producto[i].con);
+					printf("A%co de lanzamiento: %d \n",164,  Producto[i].nart);
+					printf("Precio unitario del articulo: %f \n", Producto[i].pre);
+					printf("el iva aplicado es de %f \n", iva(Producto[i].pre));
+					printf("el precio total es de %f \n", precio(Producto[i].pre));
+					printf("\n");
+				}
+			}
+			
+
 		}
-		else
+		break;
+
+	case 2:
+		for (int i = 0; i < cant; i++)
 		{
-			printf("Numero de articulo: %d \n", Producto[i].nart);
-			printf("Nombre del articulo: %s \n", Producto[i].nom);
-			printf("Descripcion del articulo: %s \n", Producto[i].desc.c_str());
-			printf("Genero del articulo: %s \n", Producto[i].gen);
-			printf("Clasificacion del articulo: %s \n", Producto[i].clas);
-			printf("Consola: %s \n", Producto[i].con);
-			printf("Precio unitario del articulo: %f \n", Producto[i].pre);
-			printf("el precio total es de %f \n", precio(Producto[i].pre));
-			printf("\n");
+
+			if (Producto[i].gen == clave)
+			{
+				if (Producto[i].pre == 0)
+				{
+					printf("PRODUCTO ELIMINADO %d \n", i + 1);
+					printf("\n");
+				}
+				else
+				{
+					printf("Numero de articulo: %d \n", Producto[i].nart);
+					printf("Nombre del articulo: %s \n", Producto[i].nom);
+					printf("Descripcion del articulo: %s \n", Producto[i].desc.c_str());
+					printf("Genero del articulo: %s \n", Producto[i].gen);
+					printf("Caracteristicas del articulo: %s \n", Producto[i].carac.c_str());
+					printf("Clasificacion del articulo: %s \n", Producto[i].clas);
+					printf("Consola: %s \n", Producto[i].con);
+					printf("A%co de lanzamiento: %d \n", 164, Producto[i].nart);
+					printf("Precio unitario del articulo: %f \n", Producto[i].pre);
+					printf("el iva aplicado es de %f \n", iva(Producto[i].pre));
+					printf("el precio total es de %f \n", precio(Producto[i].pre));
+					printf("\n");
+				}
+			}
+		
 		}
+		break;
+
+	case 3:
+		for (int i = 0; i < cant; i++)
+		{
+			if (Producto[i].clas == clave)
+			{
+				if (Producto[i].pre == 0)
+				{
+					printf("PRODUCTO ELIMINADO %d \n", i + 1);
+					printf("\n");
+				}
+				else
+				{
+					printf("Numero de articulo: %d \n", Producto[i].nart);
+					printf("Nombre del articulo: %s \n", Producto[i].nom);
+					printf("Descripcion del articulo: %s \n", Producto[i].desc.c_str());
+					printf("Genero del articulo: %s \n", Producto[i].gen);
+					printf("Caracteristicas del articulo: %s \n", Producto[i].carac.c_str());
+					printf("Clasificacion del articulo: %s \n", Producto[i].clas);
+					printf("Consola: %s \n", Producto[i].con);
+					printf("A%co de lanzamiento: %d \n", 164, Producto[i].nart);
+					printf("Precio unitario del articulo: %f \n", Producto[i].pre);
+					printf("el iva aplicado es de %f \n", iva(Producto[i].pre));
+					printf("el precio total es de %f \n", precio(Producto[i].pre));
+					printf("\n");
+				}
+			}
+			
+		}
+		break;
+
+	   default:
+		printf("Usted no ha elegido un filtro \n");
+		for (int i = 0; i < cant; i++)
+		{
+
+			if (Producto[i].pre == 0)
+			{
+				printf("PRODUCTO ELIMINADO %d \n", i + 1);
+				printf("\n");
+			}
+			else
+			{
+				printf("Numero de articulo: %d \n", Producto[i].nart);
+				printf("Nombre del articulo: %s \n", Producto[i].nom);
+				printf("Descripcion del articulo: %s \n", Producto[i].desc.c_str());
+				printf("Genero del articulo: %s \n", Producto[i].gen);
+				printf("Caracteristicas del articulo: %s \n", Producto[i].carac.c_str());
+				printf("Clasificacion del articulo: %s \n", Producto[i].clas);
+				printf("Consola: %s \n", Producto[i].con);
+				printf("A%co de lanzamiento: %d \n", 164, Producto[i].nart);
+				printf("Precio unitario del articulo: %f \n", Producto[i].pre);
+				printf("el iva aplicado es de %f \n", iva(Producto[i].pre));
+				printf("el precio total es de %f \n", precio(Producto[i].pre));
+				printf("\n");
+			}
+		}
+		break;
 	}
+
 }
 
 void salir()
@@ -300,11 +503,15 @@ void salir()
 	//para hacerlo modo tabla
 	archivo << "ARTICULO" << "\t";
 	archivo << "NOMBRE" << "\t";
-	archivo << "DESCRIPCION" << "\t"<<"\t";
+	archivo << "DESCRIPCION" << "\t" << "\t";
 	archivo << "GENERO" << "\t";
-	archivo << "CLAS." << "\t"<< "\t";
+	archivo << "CARACT" << "\t" << "\t";
+	archivo << "CLAS." << "\t" << "\t";
 	archivo << "CONSOLA" << "\t";
-	archivo << "PRECIO" << "\n";
+	archivo << "A%CO"<< 164 << "\t"; //checa si lo acepta
+	archivo << "P. UNITARIO" << "\t";
+	archivo << "IVA" << "\t";
+	archivo << "P. TOTAL" << "\n";
 
 
 	for (int i = 0; i < cant; i++)
@@ -327,10 +534,19 @@ void salir()
 			archivo << txt << "\t " << "\t";
 			txt = Producto[i].gen;
 			archivo << txt << "\t " << "\t";
+			txt = Producto[i].carac;
+			archivo << txt << "\t " << "\t";
 			txt = Producto[i].clas;
 			archivo << txt << "\t " << "\t";
 			txt = Producto[i].con;
 			archivo << txt << "\t " << "\t";
+			txt3 = Producto[i].fecha;
+			archivo << txt3 << "\t " << "\t";
+			txt2 = Producto[i].pre;
+			archivo << txt2 << "\t" << "\t";
+			Producto[i].pre = iva(Producto[i].pre);
+			txt2 = Producto[i].pre;
+			archivo<<txt2<< "\t" << "\t";
 			Producto[i].pre = precio(Producto[i].pre);
 			txt2 = Producto[i].pre;
 			archivo << txt2 << "\n";
@@ -347,5 +563,12 @@ float precio(float x)
 	float tot;
 
 	tot = (x * 0.16) + x;
+	return tot;
+}
+
+float iva(float x)
+{
+	float tot;
+	tot = x * .16;
 	return tot;
 }
